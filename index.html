@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/index.css">
+    <title>Number Sequences</title>
+</head>
+<body>
+    <div class="container">
+        <h1>The Number Sequences Calculator</h1>
+
+        <div class="result-sheet">
+            <label for="fibonacciNumber">Enter a Number for Fibonacci Sequence:</label>
+            <input type="number" id="fibonacciNumber">
+            <button onclick="calculateFibonacci()">Calculate Fibonacci</button>
+            <div class="output" id="fibonacciOutput"></div>
+        </div>
+
+        <div class="result-sheet">
+            <label for="lucasNumber">Enter a Number for Lucas Sequence:</label>
+            <input type="number" id="lucasNumber">
+            <button onclick="calculateLucas()">Calculate Lucas</button>
+            <div class="output" id="lucasOutput"></div>
+        </div>
+
+        <div class="result-sheet">
+            <label for="collatzNumber">Enter a Number for Collatz Sequence:</label>
+            <input type="number" id="collatzNumber">
+            <button onclick="calculateCollatz()">Calculate Collatz</button>
+            <div class="output" id="collatzOutput"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateFibonacci() {
+            calculateSequence("fibonacciNumber", "fibonacciOutput", fibonacci);
+        }
+
+        function calculateLucas() {
+            calculateSequence("lucasNumber", "lucasOutput", lucas);
+        }
+
+        function calculateCollatz() {
+            calculateSequence("collatzNumber", "collatzOutput", collatz);
+        }
+
+        function calculateSequence(inputId, outputId, sequenceFunction) {
+            const numberInput = document.getElementById(inputId);
+            const outputDiv = document.getElementById(outputId);
+            const number = parseInt(numberInput.value);
+
+            if (isNaN(number)) {
+                outputDiv.innerHTML = "<p>Please enter a valid number.</p>";
+                return;
+            }
+
+            const sequence = sequenceFunction(number);
+            const sequenceResult = sequence.result;
+            const sequenceOutput = sequence.sequence;
+
+            outputDiv.innerHTML = `
+                <div class="result-box">
+                    <p>${sequenceFunction.name}(${number}):  ${sequenceResult}</p>
+                    <p>Sequence Solution: ${sequenceOutput}</p>
+                </div>
+            `;
+        }
+
+        function fibonacci(n) {
+            if (n <= 1) return { result: n, sequence: '0, 1' };
+            let a = 0, b = 1, temp;
+            const sequence = [0, 1];
+            for (let i = 2; i <= n; i++) {
+                temp = a + b;
+                sequence.push(temp);
+                a = b;
+                b = temp;
+            }
+            return { result: temp, sequence: sequence.join(', ') };
+        }
+
+        function lucas(n) {
+            if (n === 0) return { result: 2, sequence: '2' };
+            if (n === 1) return { result: 1, sequence: '2, 1' };
+            let a = 2, b = 1, temp;
+            const sequence = [2, 1];
+            for (let i = 2; i <= n; i++) {
+                temp = a + b;
+                sequence.push(temp);
+                a = b;
+                b = temp;
+            }
+            return { result: temp, sequence: sequence.join(', ') };
+        }
+
+        function collatz(n) {
+            let sequence = [n];
+            let steps = 0;
+            while (n !== 1) {
+                if (n % 2 === 0) {
+                    n /= 2;
+                } else {
+                    n = 3 * n + 1;
+                }
+                sequence.push(n);
+                steps++;
+            }
+            return { result: steps, sequence: sequence.join(', ') };
+        }
+    </script>
+</body>
+</html>
